@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Spawner_autos : MonoBehaviour
 {
     public GameObject prefabAuto;
-    public float intervaloSpawn = 2f;
+    public float intervaloSpawn = 0.2f;
     public float velMinima = 4f;
     public float velMaxima = 6f;
     public float rotacionMin = 0f;
@@ -47,13 +47,22 @@ public class Spawner_autos : MonoBehaviour
     {
         //temporizador para crear un nuevo auto
         nextSpawnTime -= Time.unscaledDeltaTime;
+        float fps = (short)(Mathf.RoundToInt(1f / Time.unscaledDeltaTime));
 
-        if (nextSpawnTime <= 0f)
+        if (fps > 30)
         {
-            GenerarAuto();
-            //restablece el temporizador
-            nextSpawnTime = intervaloSpawn;
+            if (nextSpawnTime <= 0f)
+            {
+                GenerarAuto();
+                //restablece el temporizador
+                nextSpawnTime = intervaloSpawn;
+            }
         }
+        else 
+        {
+            Debug.Log("ya no se generan más objetos por limite de fps");
+        }
+        
     }
 
     private void GenerarAuto()
@@ -84,10 +93,6 @@ public class Spawner_autos : MonoBehaviour
             Color colorAleatorio = Color.HSVToRGB(tonoAleatorio, saturacion, brillo);
             spriteRenderer.color = colorAleatorio;
         }
-
-        //incrementa el contador de autos y actualiza el label
-        contadorAutos++;
-        contadorAutosUpdate();
 
     }
 
