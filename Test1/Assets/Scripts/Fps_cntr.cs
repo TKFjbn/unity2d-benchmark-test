@@ -21,43 +21,37 @@ public class Fps_cntr : MonoBehaviour
     public TextMeshProUGUI FPSCeroUnoP;
     public TextMeshProUGUI lblAuto;
     public TextMeshProUGUI Memoria;
+    public TMP_InputField logText;
 
 
     public short fpsActual { get; private set; } = 0;
     public short mediaFps { get; private set; } = 0;
-    public short fpsCeroUnoP = 0;
-    public short fpsUnoP = 0;
-    public string nombrePrefabAuto = "Auto_0";
+    private short fpsCeroUnoP = 0;
+    private short fpsUnoP = 0;
 
-    public List<float> listaFps = new List<float>();
-    public short[] muestreoFps;
-    public short[] muestreoFpsOrdenado;
-
-    
+    private List<float> listaFps = new List<float>();
+    private short[] muestreoFps;
+    private short[] muestreoFpsOrdenado;
     private short conteoMuesFps = 0;
     private short indexSample = 0;
     private short capMuestreoFps = 1024;
     private short muestrasUnP = 10;
     private short muestrasCeroUnP = 1;
-
     private long memoriaTotal;
     private float memoriaTotalMB;
     private float deltaTime = 0f;
     private float unescaledDeltaTime = 0f;
-    public float fpsMax = 0f;
-    public float fpsMin = 0f;
+    private float fpsMax = 0f;
+    private float fpsMin = 0f;
     private float fTimeActual = 0f;
     private float siguienteUpdate = 0.0f;
     private float tasaUpdate = 0.5f;
-    private int conteoFPS = 0;
-    public int tasaRefresco = 4;
-    public int total = 0;
-
-
+    private int tasaRefresco = 4;
     private float fpsSuavizado;
     private float fTimeSuavizado;
-
-    public float tiempoEspera;
+    private float tiempoEspera;
+    int contadorAutos = 0;
+    private string contenidoLog = "";
 
     readonly FrameTiming[] m_FrameTimings = new FrameTiming[1];
 
@@ -73,7 +67,7 @@ public class Fps_cntr : MonoBehaviour
 
 
 
-        while (true) 
+        while (true)
         {
             //Conteo de fps actual
             fpsActual = (short)(Mathf.RoundToInt(1f / unescaledDeltaTime));
@@ -94,8 +88,6 @@ public class Fps_cntr : MonoBehaviour
         ContadorLabelUpdate();
         deltaTime += Time.unscaledDeltaTime;
         unescaledDeltaTime = Time.unscaledDeltaTime;
-      
-        conteoFPS++;
 
         // actualiza la media de fps
         uint mediaFpsAñadida = 0;
@@ -122,7 +114,7 @@ public class Fps_cntr : MonoBehaviour
         if (Time.unscaledTime >= siguienteUpdate)
         {
             siguienteUpdate += tasaUpdate;
-            
+
         }
 
         // 0.1% y 1% 
@@ -141,7 +133,7 @@ public class Fps_cntr : MonoBehaviour
 
         short muesParaComenzar = (short)(capMuestreoFps - conteoMuesFps);
 
-        for(short i = muesParaComenzar; i < muesParaComenzar + muesAtravesDeUnoP; i++)
+        for (short i = muesParaComenzar; i < muesParaComenzar + muesAtravesDeUnoP; i++)
         {
             fpsTotalAñadido += (ushort)muestreoFpsOrdenado[i];
 
@@ -149,12 +141,12 @@ public class Fps_cntr : MonoBehaviour
             {
                 ceroComaUnoPCalculado = true;
 
-                fpsCeroUnoP = (short)((float) fpsTotalAñadido / (float)muestrasCeroUnP);
+                fpsCeroUnoP = (short)((float)fpsTotalAñadido / (float)muestrasCeroUnP);
             }
         }
 
-        fpsUnoP = (short)((float) fpsTotalAñadido / (float) muestrasUnP);
-        
+        fpsUnoP = (short)((float)fpsTotalAñadido / (float)muestrasUnP);
+
         //Calcula el total de memoria utilizada
         memoriaTotal = Profiler.GetTotalAllocatedMemoryLong();
         memoriaTotalMB = memoriaTotal / (1024f * 1024f);
@@ -172,6 +164,14 @@ public class Fps_cntr : MonoBehaviour
             FPSCeroUnoP.text = $"0.1% bajo: {fpsCeroUnoP}";
             Memoria.text = $"Memoria: {memoriaTotalMB:F2} MB";
         }
+
+        //actualiza el log
+
+        if(contadorAutos != 0 && contadorAutos % 50 == 0)
+        {
+            agregarDataLog();
+        }
+
     }
 
 
@@ -196,6 +196,27 @@ public class Fps_cntr : MonoBehaviour
         }
     }
 
+    private void agregarDataLog()
+    {
+        string nuevoRegistro =
+            $"===========LOG============\n" +
+            $"Objetos = {contadorAutos}\n" +
+            $"FPS = {fpsActual}\n"+
+            $"Frametime = {fTimeActual:0.0}\n" +
+            $"FPS avg = {mediaFps}\n" +
+            $"FPS max = {fpsMax}\n" +
+            $"FPS min = {fpsMin}\n" +
+            $"1% = {fpsUnoP}\n" +
+            $"0.1% = {fpsCeroUnoP}\n" +
+            $"Memoria = {memoriaTotalMB:F2}MB\n" +
+            $"==========================";
+
+        contenidoLog = nuevoRegistro;
+        logText.text = contenidoLog;
+    }
+
+
+
     public void ParametrosActualizados()
     {
         muestrasUnP = (short)(capMuestreoFps / 100);
@@ -204,16 +225,8 @@ public class Fps_cntr : MonoBehaviour
 
     private void ContadorLabelUpdate()
     {
-        int contadorAutos = 0;
-        GameObject[] todosLosObjetos = FindObjectsOfType<GameObject>();
 
-        foreach (GameObject obj in todosLosObjetos)
-        {
-            if (obj.name.Contains(nombrePrefabAuto + "(Clone)"))
-            {
-                contadorAutos ++;
-            }
-        }
+        contadorAutos = GameObject.FindGameObjectsWithTag("Auto").Length / 5;
 
         if (lblAuto != null)
         {
