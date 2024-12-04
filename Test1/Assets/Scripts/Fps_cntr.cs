@@ -54,7 +54,6 @@ public class Fps_cntr : MonoBehaviour
     public int total = 0;
 
 
-
     private float fpsSuavizado;
     private float fTimeSuavizado;
 
@@ -205,8 +204,16 @@ public class Fps_cntr : MonoBehaviour
 
     private void ContadorLabelUpdate()
     {
+        int contadorAutos = 0;
+        GameObject[] todosLosObjetos = FindObjectsOfType<GameObject>();
 
-        int contadorAutos = GameObject.FindGameObjectsWithTag("Auto").Length / 5;
+        foreach (GameObject obj in todosLosObjetos)
+        {
+            if (obj.name.Contains(nombrePrefabAuto + "(Clone)"))
+            {
+                contadorAutos ++;
+            }
+        }
 
         if (lblAuto != null)
         {
