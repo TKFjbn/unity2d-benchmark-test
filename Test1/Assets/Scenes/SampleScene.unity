@@ -408,7 +408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &234904978
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2282,6 +2282,7 @@ GameObject:
   - component: {fileID: 1130169847}
   - component: {fileID: 1130169846}
   - component: {fileID: 1130169845}
+  - component: {fileID: 1130169848}
   m_Layer: 5
   m_Name: LOG
   m_TagString: Untagged
@@ -2306,8 +2307,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -209.85999, y: -595.98}
-  m_SizeDelta: {x: 419.73, y: 968.04}
+  m_AnchoredPosition: {x: -209.85999, y: -539.99994}
+  m_SizeDelta: {x: 419.73, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1130169845
 MonoBehaviour:
@@ -2445,6 +2446,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130169843}
   m_CullTransparentMesh: 1
+--- !u!114 &1130169848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130169843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcc787107fcfbf45ae1e377f8ae3174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lblAuto: {fileID: 2056513081}
+  logText: {fileID: 1130169845}
 --- !u!1 &1251841415
 GameObject:
   m_ObjectHideFlags: 0
